@@ -3,8 +3,7 @@ import uuid
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.utils.datastructures import MultiValueDictKeyError
-from users.models import Users
-
+from .models import Users
 
 
 def login(request):
@@ -26,11 +25,12 @@ def login(request):
             u[0].token = uuid.uuid4()
             u[0].save()
             print('sdfsdf', u[0].token)
-            return redirect(
-                '/chat/'
-            )
+            response = redirect('/chat/')
+            response.set_cookie('token', u[0].token)
+            return response
         else:
             return HttpResponse("Not found", status=404)
+
 
 def index(request):
     return HttpResponse("<html><title>Salam</title><h1>Salam</h1></html>")
@@ -39,7 +39,7 @@ def index(request):
 def validate_user_add_request(data):
     if len(data['firstname']) < 2:
         return False, 'Your firstname must be greater than 3 chars', 'firstname'
- 
+
     return True, ''
 
 
@@ -81,7 +81,6 @@ def user_list(request):
 
 
 def user_add(request):
-   
     print(request.GET)
     p = Person(
         request.GET['firstname'],

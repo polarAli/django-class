@@ -1,36 +1,41 @@
 <html>
-    <head>
-        <title>
-            Chat Page
-        </title>
-    </head>
-    <body>
+<head>
+    <title>
+        Chat Page
+    </title>
+</head>
+<body>
+<div>
+    <h2>
+        User List
+    </h2>
+    <ul>
+        {% for u in users %}
+            <li>
+                <a href="/chat/{{ u.id }}">{{ u.get_full_name }}</a>
+            </li>
+        {% endfor %}
+    </ul>
+</div>
+<div>
+    {% if chat_available %}
+        <h2>
+            Message List
+        </h2>
+        {% for message in messages %}
+            <p>{{ message.sender }} to {{ message.receiver }}: {{ message.text }}</p>
+        {% endfor %}
         <div>
-            <h2>
-                User List
-            </h2>
-            <ul>
-                {% for u in users %}
-                <li>
-                    <a href="/chat/{{ u.id }}">{{ u.get_full_name }}</a>
-                </li>
-                {% endfor %}
-            </ul>
-        </div>
-        <div>
-            <h2>
-                Message List
-            </h2>
-            <div>
-                <form method="POST" action="/chat/message/new">
+            <form method="POST" action="/chat/message/new">
                     <textarea name="text" rows=3 cols=100>
                     </textarea>
-                    <input type="hidden" name="receiver" value="{{ receiver }}">
-                    <input type="submit" value="Send Message" />
-                        
-                    
-                </form>
-            </div>
+                <input type="hidden" name="receiver" value="{{ receiver }}">
+                <input type="submit" value="Send Message"/>
+
+
+            </form>
         </div>
-    </body>
+    {% endif %}
+</div>
+</body>
 </html>
